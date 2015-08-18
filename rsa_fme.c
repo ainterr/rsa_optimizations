@@ -1,40 +1,69 @@
 #include <stdio.h>
 #include <math.h>
+#include <gmp.h>
+#include <gmpxx.h>
+#include <iostream>
 
-main() {
-	int p = 24, q = 24; // Arbitrary, non-prime numbers
-	int n, t, e, d;
+using namespace std;
 
-	printf("RSA Encryptor/Decryptor\n\n");
+int keygen();
+int * bin_array(mpz_class num);
+int prime(mpz_class num);
+void print_bin(mpz_class num);
+mpz_class mod(mpz_class m, mpz_class exp, mpz_class n);
+
+int main(int argc, char *argv[]) {
+	if(argc == 1) {	
+		cout << "Usage: rsa_fme keygen\n";
+		cout << "Usage: rsa_fme mod [message] [exponent] [modulus]\n";
+		return 0;
+	}
+	if(!strcmp(argv[1], "keygen")) return keygen();	
+	if(!strcmp(argv[1], "mod")) {
+		mpz_class m, e, n;
+		m = argv[2];
+		e = argv[3];
+		n = argv[4];
+
+		cout << mod(m, e, n) << "\n";
+	}
+}
+
+int keygen() {
+	mpz_class p = 4, q = 4; // Arbitrary, non-prime numbers
+	mpz_class n, t, e, d;
+
+	cout << "RSA Key Generator\n\n";
 
 	// Take in two prime numbers
 	while(!prime(p)) {
-		printf("Enter a prime number(p): ");
-		scanf("%d", &p);
+		cout << "Enter a prime number(p): ";
+		cin >> p;
 	}
 	while(!prime(q)) {
-		printf("Enter a prime number(q): ");
-		scanf("%d", &q);
+		cout << "Enter a prime number(q): ";
+		cin >> q;
 	}
 
 	// Calculate n
 	n = p * q;
-	printf("n: %d\n", n);
+	cout << "n: " << n << "\n";
 
 	// Calculate the totient of n
 	t = n - (p + q - 1);
-	printf("t(n): %d\n", t);
+	cout << "t(n): " << t << "\n";
 
 	// Print possible values of e
-	printf("Some possible values for e:\n");
-	int x, y = 0;
+	cout << "Some possible values for e:\n";
+	mpz_class x;
+	int y = 0;
 	for(x = t-1; x > 0; x--) {
 		// e must be coprime to t and should not be equal to p or q
 		if (t % x == 0 || !prime(x) || x == p || x == q) continue;
 		
-		printf("%d (", x);
+		cout << x << " (";
 		print_bin(x);
-		printf(")\n");
+		cout << ")\n";
 
 		y++;
 		if (y > 25) break; // limit the number of options printed to the screen
@@ -42,48 +71,72 @@ main() {
 	printf("\n");
 	
 	// Allow the user to select one
-	e = 24; // Arbitrary, non-prime number
+	e = 4; // Arbitrary, non-prime number
 	while(t % e == 0 || !prime(e) || e == p || e == q) {
-		printf("Please select a value for e: ");
-		scanf("%d", &e);
+		cout << "Please select a value for e: ";
+		cin >> e;
 	}
 
 	// Calculate a value for d
 	d = 1;
 	while(1) { d += t; if (d % e == 0) { d /= e; break; } }
-	printf("d: %d\n", d);
+	cout << "d: " << d << "\n";
 
-	printf("\nPublic Key: e=%d,n=%d\n", e, n);
-	printf("\bPrivate Key: d=%d\n", d);
+	cout << "\nPublic Key: e=" << e << ",n=" << n << "\n";
+	cout << "\bPrivate Key: d=" << d << "\n";
 
-	// MOD TESTING
-	//printf("%d\n", mod(8363, 11787, 137*131, 137, 131));
+	// MOD TESTING - decrypt the cyphertext "5"
+	//mpz_class message = 5;
+	//cout << mod(message, d, n) << "\n";
 
 	return 0;
 }
 
-prime(int num) {
-	int x;
+int prime(mpz_class num) {
+	mpz_class x;
 	for(x = 2; x < sqrt(num) + 1; x++) 
 		if (num % x == 0) return 0;
 	return 1;
 }
 
-print_bin(int num) {
-	while(num) {
-		num & 1 ? printf("1"): printf("0");
+void print_bin(mpz_class num) {
+	mpz_class n;
+	while(num != 0) {
+		n = num & 1;
+		n != 0 ? cout << 1: cout << 0;
 		num >>= 1;
 	}
 }
 
-mod(int m, int exp, int n, int p, int q) {
-	// CRT optimized modular exponentiation
-	int dp = exp % (p - 1);
-	int dq = exp % (q - 1);
-	int q_inv = (1 / q) % p;
-	int m_1 = (int)pow(m, dp) % p;
-	int m_2 = (int)pow(m, dq) % q;
-	int h = q_inv * (m_1 - m_2 + p) % p;
-	
-	return m_2 + h * q;
+int * bin_array(mpz_class num) {
+	static int bin[sizeof(num)*8] = { 0 };
+	int x = 0;
+	mpz_class n;
+
+	while(num > 0) {
+		n = num & 1;
+		if(n != 0) bin[x] = 1;
+		else  bin[x] = 0;
+
+		num >>= 1;
+		x++;
+	}
+
+	return bin;
+}
+
+mpz_class mod(mpz_class m, mpz_class exp, mpz_class n) {
+	int * bin = bin_array(exp);
+	int x;
+	mpz_class ret = 1;
+	mpz_class val = m % n;
+
+	for(x = 0; x < sizeof(exp)*8; x++) {
+		if(x) val = (val * val) % n;
+		if(bin[x]) ret *= val;
+	}
+
+	ret %= n;
+
+	return ret;
 }

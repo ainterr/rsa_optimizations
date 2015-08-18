@@ -1,7 +1,6 @@
 all:
-	gcc rsa_fme.c -o rsa_fme -lm
+	g++ rsa_fme.c -o rsa -lm -lgmpxx -lgmp
 fme:
-	gcc rsa_fme.c -o rsa -lm
+	g++ rsa_fme.c -o rsa -lm -lgmpxx -lgmp
 clean:
-	rm rsa
-	rm rsa_fme
+	rm rsa *.o
