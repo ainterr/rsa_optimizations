@@ -2,6 +2,8 @@
 #include <math.h>
 #include <gmp.h>
 #include <gmpxx.h>
+#include <time.h>
+#include <stdint.h>
 #include <iostream>
 
 using namespace std;
@@ -25,7 +27,16 @@ int main(int argc, char *argv[]) {
 		e = argv[3];
 		n = argv[4];
 
+		uint64_t diff;
+		struct timespec start, end;
+		clock_gettime(CLOCK_MONOTONIC, &start);
+	
 		cout << mod(m, e, n) << "\n";
+
+		clock_gettime(CLOCK_MONOTONIC, &end);
+		diff = 1000000000L * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
+
+		cout << "Computed in " << (double)diff / 1000000000. << " s\n";
 	}
 }
 
