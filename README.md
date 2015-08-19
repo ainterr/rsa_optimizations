@@ -10,7 +10,8 @@ This project comprises a number of different RSA optimizations along with an RSA
 * Chinese Remainder Theorem - Coming Soon
 * Montgomery Multiplication - Coming Soon
 
-###Running The Code
+####Running The Code
 Compiling will generate an `rsa` binary.
 * To generate new keys, run `rsa keygen`.
-* To run an encryption/decryption run `rsa mod [message] [exponent] [modulus]`.
+* To run an encryption/decryption run `rsa mod [message] [exponent] [modulus] [first_prime] [second_prime]`.
+* You can specify constant exponent, modulus, p, and q values by defining them in `rsa.cpp`. An example 4096 bit private key is included.
