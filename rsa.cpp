@@ -54,12 +54,13 @@ int main(int argc, char *argv[]) {
 		struct timespec start, end;
 		clock_gettime(CLOCK_MONOTONIC, &start);
 	
-		cout << mod(m, e, n) << "\n";
+		//cout << mod(m, e, n) << "\n";
+		mod(m, e, n);
 
 		clock_gettime(CLOCK_MONOTONIC, &end);
 		diff = 1000000000L * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
 
-		cout << "Computed in " << (double)diff / 1000000000. << " s\n";
+		cout << (double)diff << "\n";
 	}
 }
 
