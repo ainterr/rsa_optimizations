@@ -7,7 +7,7 @@ This project comprises a number of different RSA optimizations along with an RSA
 
 ####Optimizations
 * Fast Modular Exponentiation - For an explanation of this optimization, see [here](https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/fast-modular-exponentiation). To compile with this optimization, run `make fme`.
-* Chinese Remainder Theorem - Coming Soon
+* Chinese Remainder Theorem - Coming Very Soon
 * Montgomery Multiplication - Coming Soon
 
 ####Running The Code
