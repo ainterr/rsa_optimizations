@@ -1,4 +1,4 @@
-ALL = rsa_fme rsa_unopt
+ALL = rsa_fme rsa_crt rsa_unopt
 
 CC = g++
 DEBUG =
@@ -19,8 +19,14 @@ rsa_fme: rsa.o mod_fme.o
 mod_fme.o: mod_fme.cpp
 	$(CC) $(CFLAGS) mod_fme.cpp
 
+rsa_crt: rsa.o mod_crt.o
+	$(CC) rsa.o mod_crt.o -o rsa_crt $(LFLAGS)
+
+mod_crt.o: mod_crt.cpp
+	$(CC) $(CFLAGS) mod_crt.cpp
+
 rsa.o: rsa.cpp
 	$(CC) $(CFLAGS) rsa.cpp
 
 clean:
-	rm *.o rsa_unopt rsa_fme
+	rm *.o rsa_unopt rsa_fme rsa_crt
