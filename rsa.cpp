@@ -51,16 +51,27 @@ int main(int argc, char *argv[]) {
 		precompute(p, q, e, n);
 
 		uint64_t diff;
+		#ifdef __APPLE__ // If we're on a Mac, clock_gettime isn't going to work...
+		clock_t start, end;
+		start = clock();
+		#else
 		struct timespec start, end;
 		clock_gettime(CLOCK_MONOTONIC, &start);
+		#endif
 	
 		//cout << mod(m, e, n) << "\n";
 		mod(m, e, n);
 
+		#ifdef __APPLE__
+		end = clock();
+		// NOTE: If we're on a Mac, then we only really get ms precision...
+		diff = 1000000L * (end - start) / CLOCKS_PER_SEC;
+		#else
 		clock_gettime(CLOCK_MONOTONIC, &end);
 		diff = 1000000000L * (end.tv_sec - start.tv_sec) + end.tv_nsec - start.tv_nsec;
+		#endif
 
-		cout << (double)diff << "\n";
+		cout << (float)diff << "\n";
 	}
 }
 
