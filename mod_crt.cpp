@@ -8,85 +8,89 @@
 using namespace std;
 
 //Ya these are important
-mpz_class g_p;
-mpz_class g_q;
+mpz_class g_p; //Prime 1
+mpz_class g_q; //Prime 2
 
 //Precompute global variables
 mpz_class m;
 mpz_class dp;
 mpz_class dq;
 mpz_class qinv;
-//mpz_class m1;
-//mpz_class m2;
-//mpz_class h;
 
-//Inverse Global Variables
-mpz_class x = 0, y = 1, v = 0;
-mpz_class e,a,f;
-mpz_class c,d,iq,r;
-
-
-mpz_class modInverse(const mpz_class &a,const mpz_class &m);
-void  mpz_pow(mpz_class &ret, const mpz_class &base, const mpz_class &exp);
+//Functions
+void mul_inv(mpz_class &ret, const mpz_class &a, const mpz_class &b);
+void mpz_pow(mpz_class &ret, const mpz_class &base, const mpz_class &exp);
 
 mpz_class mod(mpz_class &m, mpz_class &exp, mpz_class &n) { //calculates the mod 
-//	cout << "Entered mod" <<endl;
-	mpz_class ret;
+	cout << "Entered mod" <<endl;
+	mpz_class ret;			//Declare some local varialbes
 	mpz_class temp, h, m1, m2;
-	       	mpz_pow(temp, c, dp);
+
+	mpz_pow(temp, m, dp);		//Calc m1, m2, qinv.
 		m1 = temp%g_p;
-		mpz_pow(temp, c, dq);
+	mpz_pow(temp, m, dq);
 		m2 = temp%g_q;
 	h = qinv*(m1 - m2)%g_p;
 
 	ret = (m2 + (h*g_q));
-//	cout << "Exit mod" << endl;
+	cout << "Exit mod" << endl;
 	return ret;
 }
 
 void precompute(mpz_class &p, mpz_class &q, mpz_class &exp, mpz_class &n) { //precomptes values needed for mod fx.
-//	cout << "Entered pre-compute" << endl;	
-	g_p = p;
+	cout << "Entered pre-compute" << endl;	
+	mpz_class temp;
+
+	g_p = p; 			//Store the original values of P & Q globally
 	g_q = q;
-	dp = modInverse(exp, p-1);
-	dq = modInverse(exp, q-1);
-	qinv = modInverse(q, p);
-//	cout << "Exit pre-computer" << endl;
+	mul_inv(temp, exp, p-1);	//Calculate and store dp, dq, qinv globally
+		dp = temp;
+	mul_inv(temp, exp, q-1);
+		dq = temp;
+	mul_inv(temp, q, p);
+		qinv = temp;
+	cout << "dp: " << dp << " dq: " << dq << " qinv: " << qinv << endl;
+	cout << "Exit pre-computer" << endl;
 }
 
-mpz_class modInverse(const mpz_class &a,const mpz_class &m){ //Taken from some forgotten website. tb disected
-//	cout << "Entered inverse" << endl;
-	if (a%m == 0 || m%a == 0){
-		cout << "Error. Numbers not comprime" << endl;
-		return 1;
+void mul_inv(mpz_class &ret, const mpz_class &a, const mpz_class &b)
+{
+	cout << "Entered Inverse" << endl;
+	mpz_class b0 = b, t, h;
+	mpz_class x0 = 0, x1 = 1;
+	mpz_class loc_a = a, loc_b = b;
+	if (loc_b == 1) {
+		ret = 1;
 	}
-	mpz_class u = 1;
-	 e = m, f = a;
+	
+	else {
+		while (loc_a > 1) {
+			cout << "Begin while - loc_b = " << loc_b << " loc_a: " << loc_a <<  endl;
+			h = loc_a / loc_b;
+			cout << "l2" << endl;
+			t = loc_b, loc_b = loc_a % loc_b, loc_a = t;
+			cout << "l3" << endl;
+			t = x0, x0 = x1 - h * x0, x1 = t;
+			cout << "Begin end" << endl;
+		}
 
-	while(f != 1){ //when f == 1, we've reached GCD
-		iq = e/f;
-		r = e%f;
-		c = x-iq*u;
-		d = y-iq*v;
-		x = u;
-		y = v;
-		u = c;
-		v = d;
-		e = f;
-		f = r;
+		if (x1 < 0){ 
+			x1 += b0;
+		}
+		
+		ret = x1;
 	}
-		u = (u+m)%m;
-//	cout << "Exit inverse" << endl;
-		return u;
+
+	cout << "Exit Inverse" << endl;
 }
 
 void mpz_pow(mpz_class &ret, const mpz_class &base, const mpz_class &exp){	
-//	cout << "Entered Pow" << endl;
+	cout << "Entered Pow" << endl;
 	ret = 1;
 	
 	for(mpz_class counter = 0; counter < exp; counter++){
 		ret *= base;
 	}
 	
-//	cout << "Exit pow" << endl;
+	cout << "Exit pow" << endl;
 }
