@@ -48,14 +48,17 @@ mpz_class mod(mpz_class &m, mpz_class &exp, mpz_class &n) { //calculates the mod
 
 void precompute(mpz_class &p, mpz_class &q, mpz_class &exp, mpz_class &n) { //precomptes values needed for mod fx.
 //	cout << "Entered pre-compute" << endl;	
+//	cout << "M: " << m << " P: " << p << " Q: " << q << " E: " << exp << endl;
 	mpz_class temp;
 
 	g_p = p; 			//Store the original values of P & Q globally
 	g_q = q;
-	mul_inv(temp, exp, p-1);	//Calculate and store dp, dq, qinv globally
-		dp = temp;
-	mul_inv(temp, exp, q-1);
-		dq = temp;
+	//mul_inv(temp, exp, p-1);	//Calculate and store dp, dq, qinv globally
+	//	dp = temp;
+	dp = exp%(p-1);
+	//mul_inv(temp, exp, q-1);
+	//	dq = temp;
+	dq = exp%(q-1);
 	mul_inv(temp, q, p);
 		qinv = temp;
 	cout << "dp: " << dp << " dq: " << dq << " qinv: " << qinv << endl;
