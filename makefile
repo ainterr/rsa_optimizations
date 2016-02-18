@@ -35,4 +35,4 @@ rsa.o: rsa.cpp
 	$(CC) $(CFLAGS) rsa.cpp
 
 clean:
-	rm *.o rsa_unopt rsa_fme rsa_crt
+	rm -f *.o rsa_unopt rsa_fme rsa_crt rsa_mm
