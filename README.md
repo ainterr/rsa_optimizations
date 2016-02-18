@@ -6,8 +6,8 @@ This project comprises a number of different RSA optimizations along with an RSA
 * [gmplib](https://gmplib.org/) - The GNU Multiple Precision library allows arbitrary length key exponents to be used.
 
 ####Optimizations
-* Fast Modular Exponentiation - For an explanation of this optimization, see [here](https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/fast-modular-exponentiation). To compile with this optimization, run `make fme`.
-* Chinese Remainder Theorem - Coming Very Soon
+* Fast Modular Exponentiation - For an explanation of this optimization, see [here](https://www.khanacademy.org/computing/computer-science/cryptography/modarithmetic/a/fast-modular-exponentiation). To compile with this optimization, run `make rsa_fme`.
+* Chinese Remainder Theorem - For an explanation of this optimization, see [here](https://en.wikipedia.org/wiki/RSA_cryptosystem#Using_the_Chinese_remainder_algorithm). To compile with this optimization, run `make rsa_crt`.
 * Montgomery Multiplication - Coming Soon
 
 ####Running The Code
